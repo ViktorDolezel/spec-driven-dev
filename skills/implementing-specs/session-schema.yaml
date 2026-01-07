@@ -1,0 +1,30 @@
+# Session Log Schema
+
+```yaml
+session_id: a3f2                              # 4 random alphanumeric
+timestamp: 2026-01-04T14:30:00Z               # ISO 8601
+spec: /docs/specs/password-reset.md           # Path to spec
+branch: feature/42-password-reset             # Git branch
+
+work_completed:
+  - ac_id: AC-1
+    outcome: passed                           # passed|failed|blocked|skipped
+    attempts: 1                               # How many tries
+
+failures:                                     # Empty list if none
+  - type: spec_ambiguous                      # See failure-types.md
+    detail: "Token format not specified"
+    resolution: "Used UUID, flagged for review"
+
+handoff: |
+  AC-1, AC-2 complete.
+  AC-3 in progress - validation logic done, need error handling.
+  Note: Using zxcvbn for password strength (already installed).
+```
+
+## Status Values
+
+- `passed` - Test passes, AC complete
+- `failed` - Max attempts reached, couldn't complete
+- `blocked` - Cannot proceed (missing resource, permission)
+- `skipped` - Intentionally deferred

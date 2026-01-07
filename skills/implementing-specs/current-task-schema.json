@@ -1,0 +1,12 @@
+{
+  "spec": "/docs/specs/{feature}.md",
+  "branch": "feature/{issue}-{name}",
+  "started_at": "2026-01-04T14:30:00Z",
+  "progress": {
+    "acceptance_criteria": [
+      {"id": "AC-1", "status": "passed", "attempts": 1},
+      {"id": "AC-2", "status": "in_progress", "attempts": 2},
+      {"id": "AC-3", "status": "pending"}
+    ]
+  }
+}

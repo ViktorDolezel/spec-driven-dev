@@ -1,0 +1,8 @@
+{
+  "name": "spec-driven-dev",
+  "version": "1.0.0",
+  "description": "Spec-driven development with TDD workflows and brownfield retrofit. Use /implement for greenfield, /retrofit for existing codebases.",
+  "author": "Viktor Dolezel",
+  "homepage": "https://github.com/viktordolezel/spec-driven-dev",
+  "license": "MIT"
+}
