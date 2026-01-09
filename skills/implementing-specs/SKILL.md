@@ -13,6 +13,7 @@ description: >
 
 ```
 Task Progress:
+- [ ] Validate spec quality (see spec-checklist.md)
 - [ ] Read spec and current_task.json
 - [ ] For each AC: write test → implement → verify → commit
 - [ ] Update current_task.json after each AC
@@ -37,6 +38,19 @@ If `.claude/current_task.json` doesn't exist, create it:
 }
 ```
 
+## Spec Validation (Step 0)
+
+Before implementing ANY spec, validate quality using [spec-checklist.md](spec-checklist.md).
+
+**Required gates** (must pass):
+- [ ] Every AC has Given/When/Then format
+- [ ] Given clauses have concrete values (not "a user")
+- [ ] Then clauses are testable (not "works correctly")
+- [ ] No vague words: should, appropriate, reasonable
+- [ ] Error cases documented
+
+**If validation fails**: Stop and request spec revision. Do not implement low-quality specs.
+
 ## Implementation Loop
 
 For each acceptance criterion, copy and complete:
@@ -44,12 +58,61 @@ For each acceptance criterion, copy and complete:
 ```
 AC-{N}:
 - [ ] Read AC (Given/When/Then, constraints)
-- [ ] Write test that fails
+- [ ] Write test that fails (see Test Quality Rules below)
 - [ ] Implement until test passes
 - [ ] Add provenance comment
 - [ ] Commit: [AC-{N}] {description}
 - [ ] Update current_task.json status to "passed"
 ```
+
+### Test Quality Rules
+
+A valid failing test must:
+
+1. **Reference the AC**: Test name or comment includes AC-N
+2. **Exercise the code path**: Actually call the function/endpoint being implemented
+3. **Assert the Then clause**: Assertion directly maps to expected outcome from AC
+4. **Fail for the right reason**: Failure message relates to missing implementation
+
+**Examples:**
+
+❌ **Bad - Fake failing test**:
+```javascript
+test('AC-1: validates email', () => {
+  expect(true).toBe(false)  // Fails but tests nothing
+})
+```
+
+❌ **Bad - Too weak**:
+```javascript
+test('AC-1: validates email', () => {
+  const result = validateEmail('test@example.com')
+  expect(result).toBeDefined()  // Passes even with stub
+})
+```
+
+✅ **Good - Specific assertion**:
+```javascript
+test('AC-1: rejects invalid email format', () => {
+  const result = validateEmail('not-an-email')
+  expect(result.isValid).toBe(false)
+  expect(result.error).toBe('INVALID_FORMAT')
+})
+```
+
+**Acceptable failure messages** (before implementation):
+- ✅ `validateEmail is not defined` - function doesn't exist yet
+- ✅ `expected false but got undefined` - logic not implemented
+- ✅ `Cannot read property 'isValid' of undefined` - return value missing
+- ✅ `NotImplementedError: validateEmail not yet implemented` - explicit stub
+
+**Unacceptable failure reasons** (fix test first):
+- ❌ Syntax error in test code
+- ❌ Import error unrelated to feature
+- ❌ Test framework configuration issue
+- ❌ Mock setup error
+
+**Before implementing**: Verify test fails with acceptable message. If not, fix the test.
 
 ### Provenance Comments
 
@@ -121,6 +184,7 @@ Commit the session log before ending.
 
 ## Reference
 
+- [spec-checklist.md](spec-checklist.md) - Spec validation before implementation
 - [current-task-schema.json](current-task-schema.json) - Task file format
 - [session-schema.yaml](session-schema.yaml) - Session log format
 - [failure-types.md](failure-types.md) - Failure classification

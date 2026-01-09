@@ -41,6 +41,8 @@ Investigate existing code. Document what it **does**, not what it **should** do.
 
 ## Constraints
 
-- 1 hour max per feature
+- Max 15 files traced per feature
+- Max 4 levels of call depth
+- Max 3 search attempts per question before marking "unclear"
 - "Unknown" is valid - don't guess
 - Document blockers, don't get stuck
